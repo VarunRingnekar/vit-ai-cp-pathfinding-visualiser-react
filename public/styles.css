@@ -1,0 +1,31 @@
+/*---------------------------------------------------------For Spot---------------------------------------------------------*/
+
+.spot {
+    width: 25px;
+    height: 25px;
+    outline: 1px solid grey;
+    display: inline-block;
+}
+
+.spot-finish {
+    background-color: red;
+}
+
+.spot-start {
+    background-color: green;
+}
+
+.spot-wall {
+    background-color: rgb(12, 53, 71);
+}
+
+/*---------------------------------------------------------For Grid---------------------------------------------------------*/
+
+.grid {
+    position: relative;
+    left: 13px;
+}
+
+.grid-row {
+    height: 25px;
+}
