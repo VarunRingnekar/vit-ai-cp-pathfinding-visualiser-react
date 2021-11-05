@@ -6,7 +6,12 @@ function Spot(props) {
         col,
         isFinish,
         isStart,
+        isVisited,
         isWall,
+        isPath,
+        onMouseDown,
+        onMouseUp,
+        onMouseEnter
     } = props;
 
     const extraClassName = isFinish
@@ -15,11 +20,18 @@ function Spot(props) {
             ? 'spot-start'
             : isWall
                 ? 'spot-wall'
-                : '';
+                : isVisited
+                    ? 'spot-visited'
+                    : isPath
+                        ? 'spot-path'
+                        : '';
     return (
         <div
             id={`node-${row}-${col}`}
             className={`spot ${extraClassName}`}
+            onMouseDown={() => onMouseDown(row, col)}
+            onMouseEnter={() => onMouseEnter(row, col)}
+            onMouseUp={() => onMouseUp(row, col)}
         />
     );
 }

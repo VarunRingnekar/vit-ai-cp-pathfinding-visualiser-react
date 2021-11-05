@@ -8,7 +8,7 @@ function Grid(props) {
                 return (
                     <div key={rowIdx} className={'grid-row'}>
                         {row.map(function (spot, spotIdx) {
-                            const {row, col, isFinish, isStart, isWall} = spot;
+                            const {row, col, isFinish, isStart, isWall, isVisited, isPath} = spot;
                             return (
                                 <Spot
                                     key={spotIdx}
@@ -17,6 +17,12 @@ function Grid(props) {
                                     isFinish={isFinish}
                                     isStart={isStart}
                                     isWall={isWall}
+                                    isVisited={isVisited}
+                                    isPath={isPath}
+                                    mouseIsPressed={props.mouseIsPressed}
+                                    onMouseEnter={(row, col) => props.onMouseEnter(row, col)}
+                                    onMouseDown={(row, col) => props.onMouseDown(row, col)}
+                                    onMouseUp={(row, col) => props.onMouseUp(row, col)}
                                 />
                             );
                         })}

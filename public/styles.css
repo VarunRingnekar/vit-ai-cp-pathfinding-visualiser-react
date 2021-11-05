@@ -19,6 +19,14 @@
     background-color: rgb(12, 53, 71);
 }
 
+.spot-visited {
+    background-color: blue;
+}
+
+.spot-path {
+    background-color: yellow;
+}
+
 /*---------------------------------------------------------For Grid---------------------------------------------------------*/
 
 .grid {

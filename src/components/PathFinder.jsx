@@ -1,32 +1,37 @@
 import React, {useEffect, useState} from "react";
 import Grid from "./Grid";
+import {aStar, getPath} from "../algorithms/a-star";
 
 function PathFinder() {
 
-    const START_NODE_ROW = 10;
+    const START_NODE_ROW = 2;
     const START_NODE_COL = 15;
-    const FINISH_NODE_ROW = 10;
+    const FINISH_NODE_ROW = 15;
     const FINISH_NODE_COL = 35;
 
+
     const [spots, setSpots] = useState([]);
+    const [mouseIsPressed, setMousePress] = useState(false);
     const [windowSize, setWindowSize] = useState({
         width: undefined,
         height: undefined,
     });
 
-    function newSpot(i, j) {
+    function newSpot(i, j, hScore) {
         return {
             row: i,
             col: j,
             isStart: i === START_NODE_ROW && j === START_NODE_COL,
             isFinish: i === FINISH_NODE_ROW && j === FINISH_NODE_COL,
             isWall: false,
+            isPath: false,
             previousNode: null,
             parent: null,
             neighbors: [],
             fScore: 0,
             gScore: 0,
-            hScore: 0
+            hScore: hScore,
+            isVisited: false
         };
     }
 
@@ -43,22 +48,99 @@ function PathFinder() {
         handleResize();
 
         const tempGrid = [];
+        console.log("resized")
         for (let i = 0; i < windowSize.height / 25 - 2; i++) {
             const currentRow = [];
             for (let j = 0; j < windowSize.width / 25 - 2; j++) {
-                currentRow.push(newSpot(i, j));
+                const hScore = Math.abs(i - FINISH_NODE_ROW) + Math.abs(j - FINISH_NODE_COL);
+                currentRow.push(newSpot(i, j, hScore));
             }
             tempGrid.push(currentRow);
         }
+
         setSpots(JSON.parse(JSON.stringify(tempGrid)));
-        console.log(spots);
 
         return () => window.removeEventListener("resize", handleResize);
-    }, [spots, windowSize.height, windowSize.width])
+    }, [windowSize.height, windowSize.width])
 
+    function visualiseAStar() {
+        const visitedNodesInOrder = aStar(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        // console.log(visitedNodesInOrder);
+        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        console.log(path);
+        animateAStar(visitedNodesInOrder, path);
+    }
+
+    function animateAStar(visitedNodes, path) {
+        for (let i = 0; i <= visitedNodes.length; i++) {
+            if (i === visitedNodes.length) {
+                setTimeout(() => {
+                    animatePath(path);
+                }, 10 * i);
+            } else {
+                setTimeout(() => {
+                    const node = visitedNodes[i];
+                    const newGrid = spots.slice();
+                    newGrid[node.row][node.col] = {
+                        ...node,
+                        isVisited: true
+                    };
+                    setSpots(newGrid);
+                }, 10 * i);
+            }
+        }
+    }
+
+    function animatePath(path) {
+        for (let i = 0; i < path.length; i++) {
+            setTimeout(() => {
+                const node = path[i];
+                const newGrid = spots.slice();
+                newGrid[node.row][node.col] = {
+                    ...node,
+                    isPath: true
+                };
+                setSpots(newGrid);
+            }, 50 * i);
+        }
+
+    }
+
+    function handleMouseDown(row, col) {
+        const newGrid = getNewGridWithWallToggled(spots, row, col);
+        setSpots(newGrid);
+        setMousePress(true);
+    }
+
+    function handleMouseEnter(row, col) {
+        if (!mouseIsPressed) return;
+        const newGrid = getNewGridWithWallToggled(spots, row, col);
+        setSpots(newGrid);
+    }
+
+    function handleMouseUp() {
+        setMousePress(false);
+    }
+
+    const getNewGridWithWallToggled = (grid, row, col) => {
+        const newGrid = grid.slice();
+        const node = newGrid[row][col];
+        newGrid[row][col] = {
+            ...node,
+            isWall: !node.isWall,
+        };
+        return newGrid;
+    };
 
     return (
-        <Grid array={spots}/>
+        <>
+            <button onClick={visualiseAStar}>
+                Visualise
+            </button>
+            <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
+                  onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
+        </>
+
     );
 }
 
