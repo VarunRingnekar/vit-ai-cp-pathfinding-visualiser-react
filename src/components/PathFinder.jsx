@@ -108,6 +108,17 @@ function PathFinder() {
         }
     }
 
+    function clearPath(){
+        const newGrid = spots.slice();
+        Array.from(newGrid).forEach(row => {
+            Array.from(row).forEach(spot=>{
+                spot.isVisited = false;
+                spot.isPath = false;
+            })
+        });
+        setSpots(newGrid);
+    }
+
     function animatePath(path) {
         for (let i = 0; i < path.length; i++) {
             setTimeout(() => {
@@ -151,6 +162,9 @@ function PathFinder() {
 
     return (
         <>
+            <button onClick={clearPath}>
+                Clear Path
+            </button>
             <button onClick={visualiseAStar}>
                 Visualise a-star
             </button>
