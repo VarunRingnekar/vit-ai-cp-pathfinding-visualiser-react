@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Grid from "./Grid";
-import {aStar, getPath} from "../algorithms/a-star";
+import {aStar} from "../algorithms/a-star";
+import {bestFirstSearch, getPath} from "../algorithms/best-first-search";
+import {djikstra} from "../algorithms/djikstra";
 
 function PathFinder() {
 
@@ -68,10 +70,25 @@ function PathFinder() {
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         console.log(path);
-        animateAStar(visitedNodesInOrder, path);
+        animate(visitedNodesInOrder, path);
+    }
+    function visualiseBestFirstSearch() {
+        const visitedNodesInOrder = bestFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        // console.log(visitedNodesInOrder);
+        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        console.log(path);
+        animate(visitedNodesInOrder, path);
     }
 
-    function animateAStar(visitedNodes, path) {
+    function visualiseDjikstra() {
+        const visitedNodesInOrder = djikstra(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        // console.log(visitedNodesInOrder);
+        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        console.log(path);
+        animate(visitedNodesInOrder, path);
+    }
+
+    function animate(visitedNodes, path) {
         for (let i = 0; i <= visitedNodes.length; i++) {
             if (i === visitedNodes.length) {
                 setTimeout(() => {
@@ -89,6 +106,17 @@ function PathFinder() {
                 }, 10 * i);
             }
         }
+    }
+
+    function clearPath(){
+        const newGrid = spots.slice();
+        Array.from(newGrid).forEach(row => {
+            Array.from(row).forEach(spot=>{
+                spot.isVisited = false;
+                spot.isPath = false;
+            })
+        });
+        setSpots(newGrid);
     }
 
     function animatePath(path) {
@@ -134,8 +162,17 @@ function PathFinder() {
 
     return (
         <>
+            <button onClick={clearPath}>
+                Clear Path
+            </button>
             <button onClick={visualiseAStar}>
-                Visualise
+                Visualise a-star
+            </button>
+            <button onClick={visualiseBestFirstSearch}>
+                Visualise best-first-search
+            </button>
+            <button onClick={visualiseDjikstra}>
+                Visualise djikstra
             </button>
             <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
