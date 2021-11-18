@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Grid from "./Grid";
 import {aStar, getPath} from "../algorithms/a-star";
+import {bestFirstSearch, getPathBFS} from "../algorithms/best-first-search";
 
 function PathFinder() {
 
@@ -68,10 +69,17 @@ function PathFinder() {
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         console.log(path);
-        animateAStar(visitedNodesInOrder, path);
+        animate(visitedNodesInOrder, path);
+    }
+    function visualiseBestFirstSearch() {
+        const visitedNodesInOrder = bestFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        // console.log(visitedNodesInOrder);
+        const path = getPathBFS(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        console.log(path);
+        animate(visitedNodesInOrder, path);
     }
 
-    function animateAStar(visitedNodes, path) {
+    function animate(visitedNodes, path) {
         for (let i = 0; i <= visitedNodes.length; i++) {
             if (i === visitedNodes.length) {
                 setTimeout(() => {
@@ -135,7 +143,10 @@ function PathFinder() {
     return (
         <>
             <button onClick={visualiseAStar}>
-                Visualise
+                Visualise a-star
+            </button>
+            <button onClick={visualiseBestFirstSearch}>
+                Visualise best-first-search
             </button>
             <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
