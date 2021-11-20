@@ -11,7 +11,7 @@ export function bestFirstSearch(grid, start, goal) {
         findNeighbours(grid, current);
         closedList.push(current);
         for (const neighbour of current.neighbors) {
-            if (!neighbour.isWall && !closedList.includes(neighbour) && !closedList.includes(neighbour)) {
+            if (!neighbour.isWall && !closedList.includes(neighbour) && !openList.includes(neighbour)) {
                 openList.push(neighbour);
                 neighbour.fScore = neighbour.hScore;
                 neighbour.parent = current;
