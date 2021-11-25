@@ -3,6 +3,8 @@ import Grid from "./Grid";
 import {aStar} from "../algorithms/a-star";
 import {bestFirstSearch, getPath} from "../algorithms/best-first-search";
 import {djikstra} from "../algorithms/djikstra";
+import { breadthFirstSearch } from "../algorithms/breadth-first-search";
+import {depthFirstSearch} from "../algorithms/depth-first-search";
 
 function PathFinder() {
 
@@ -88,6 +90,19 @@ function PathFinder() {
         animate(visitedNodesInOrder, path);
     }
 
+    function visualiseBreadthFirstSearch(){
+        const visitedNodesInOrder = breadthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        // console.log(visitedNodesInOrder);
+        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        console.log(path);
+        animate(visitedNodesInOrder, path);
+    }
+
+    function visualiseDepthFirstSearch(){
+        const visitedNodesInOrder = depthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
+        animate(visitedNodesInOrder, path);
+    }
     function animate(visitedNodes, path) {
         for (let i = 0; i <= visitedNodes.length; i++) {
             if (i === visitedNodes.length) {
@@ -120,7 +135,8 @@ function PathFinder() {
     }
 
     function animatePath(path) {
-        for (let i = 0; i < path.length; i++) {
+        console.log(path)
+        for (let i = path.length-1; i>=0; i--) {
             setTimeout(() => {
                 const node = path[i];
                 const newGrid = spots.slice();
@@ -129,7 +145,7 @@ function PathFinder() {
                     isPath: true
                 };
                 setSpots(newGrid);
-            }, 50 * i);
+            }, 50 * (path.length-1-i));
         }
 
     }
@@ -173,6 +189,12 @@ function PathFinder() {
             </button>
             <button onClick={visualiseDjikstra}>
                 Visualise djikstra
+            </button>
+            <button onClick={visualiseBreadthFirstSearch}>
+                Visualise breadth-first-search
+            </button>
+            <button onClick={visualiseDepthFirstSearch}>
+                Visualise depth-first-search
             </button>
             <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
