@@ -42,7 +42,7 @@ function PathFinder() {
     useEffect(() => {
         function handleResize() {
             setWindowSize({
-                width: window.innerWidth,
+                width: window.innerWidth*0.8,
                 height: window.innerHeight
             })
         }
@@ -68,6 +68,7 @@ function PathFinder() {
     }, [windowSize.height, windowSize.width])
 
     function visualiseAStar() {
+        clearPath();
         const visitedNodesInOrder = aStar(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
@@ -75,6 +76,7 @@ function PathFinder() {
         animate(visitedNodesInOrder, path);
     }
     function visualiseBestFirstSearch() {
+        clearPath();
         const visitedNodesInOrder = bestFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
@@ -83,6 +85,7 @@ function PathFinder() {
     }
 
     function visualiseDjikstra() {
+        clearPath();
         const visitedNodesInOrder = djikstra(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
@@ -91,6 +94,7 @@ function PathFinder() {
     }
 
     function visualiseBreadthFirstSearch(){
+        clearPath();
         const visitedNodesInOrder = breadthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         // console.log(visitedNodesInOrder);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
@@ -99,6 +103,7 @@ function PathFinder() {
     }
 
     function visualiseDepthFirstSearch(){
+        clearPath();
         const visitedNodesInOrder = depthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
         animate(visitedNodesInOrder, path);
@@ -177,7 +182,7 @@ function PathFinder() {
     };
 
     return (
-        <>
+        <div className="column right">
             <button onClick={clearPath}>
                 Clear Path
             </button>
@@ -198,7 +203,7 @@ function PathFinder() {
             </button>
             <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
-        </>
+        </div>
 
     );
 }
