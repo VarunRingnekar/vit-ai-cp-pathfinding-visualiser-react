@@ -38,6 +38,7 @@
 .grid {
     position: relative;
     left: 30px;
+    top: 1px;
 }
 
 .grid-row {
@@ -66,7 +67,7 @@
 .column {
     float: left;
     padding: 10px;
-    height: 701px; 
+    height: 655px; 
   }
   
   .left {

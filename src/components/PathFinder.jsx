@@ -1,21 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import Grid from "./Grid";
-import {aStar} from "../algorithms/a-star";
-import {bestFirstSearch, getPath} from "../algorithms/best-first-search";
-import {djikstra} from "../algorithms/djikstra";
-import { breadthFirstSearch } from "../algorithms/breadth-first-search";
-import {depthFirstSearch} from "../algorithms/depth-first-search";
+import SidePanel from "./SidePanel";
+
+import appContext from "../context/app-context";
+import Navbar from "./Navbar";
 
 function PathFinder() {
 
-    const START_NODE_ROW = 2;
-    const START_NODE_COL = 15;
-    const FINISH_NODE_ROW = 15;
-    const FINISH_NODE_COL = 35;
+    const {spots, setSpots, FINISH_NODE_COL, FINISH_NODE_ROW, START_NODE_COL, START_NODE_ROW} = useContext(appContext)
 
-
-    const [spots, setSpots] = useState([]);
-    const [mouseIsPressed, setMousePress] = useState(false);
     const [windowSize, setWindowSize] = useState({
         width: undefined,
         height: undefined,
@@ -43,7 +36,7 @@ function PathFinder() {
         function handleResize() {
             setWindowSize({
                 width: window.innerWidth*0.8,
-                height: window.innerHeight
+                height: window.innerHeight*0.95
             })
         }
 
@@ -53,6 +46,7 @@ function PathFinder() {
 
         const tempGrid = [];
         console.log("resized")
+        // console.log(spots)
         for (let i = 0; i < windowSize.height / 25 - 2; i++) {
             const currentRow = [];
             for (let j = 0; j < windowSize.width / 25 - 2; j++) {
@@ -67,142 +61,17 @@ function PathFinder() {
         return () => window.removeEventListener("resize", handleResize);
     }, [windowSize.height, windowSize.width])
 
-    function visualiseAStar() {
-        clearPath();
-        const visitedNodesInOrder = aStar(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        // console.log(visitedNodesInOrder);
-        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        console.log(path);
-        animate(visitedNodesInOrder, path);
-    }
-    function visualiseBestFirstSearch() {
-        clearPath();
-        const visitedNodesInOrder = bestFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        // console.log(visitedNodesInOrder);
-        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        console.log(path);
-        animate(visitedNodesInOrder, path);
-    }
+   
 
-    function visualiseDjikstra() {
-        clearPath();
-        const visitedNodesInOrder = djikstra(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        // console.log(visitedNodesInOrder);
-        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        console.log(path);
-        animate(visitedNodesInOrder, path);
-    }
-
-    function visualiseBreadthFirstSearch(){
-        clearPath();
-        const visitedNodesInOrder = breadthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        // console.log(visitedNodesInOrder);
-        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        console.log(path);
-        animate(visitedNodesInOrder, path);
-    }
-
-    function visualiseDepthFirstSearch(){
-        clearPath();
-        const visitedNodesInOrder = depthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-        animate(visitedNodesInOrder, path);
-    }
-    function animate(visitedNodes, path) {
-        for (let i = 0; i <= visitedNodes.length; i++) {
-            if (i === visitedNodes.length) {
-                setTimeout(() => {
-                    animatePath(path);
-                }, 10 * i);
-            } else {
-                setTimeout(() => {
-                    const node = visitedNodes[i];
-                    const newGrid = spots.slice();
-                    newGrid[node.row][node.col] = {
-                        ...node,
-                        isVisited: true
-                    };
-                    setSpots(newGrid);
-                }, 10 * i);
-            }
-        }
-    }
-
-    function clearPath(){
-        const newGrid = spots.slice();
-        Array.from(newGrid).forEach(row => {
-            Array.from(row).forEach(spot=>{
-                spot.isVisited = false;
-                spot.isPath = false;
-            })
-        });
-        setSpots(newGrid);
-    }
-
-    function animatePath(path) {
-        console.log(path)
-        for (let i = path.length-1; i>=0; i--) {
-            setTimeout(() => {
-                const node = path[i];
-                const newGrid = spots.slice();
-                newGrid[node.row][node.col] = {
-                    ...node,
-                    isPath: true
-                };
-                setSpots(newGrid);
-            }, 50 * (path.length-1-i));
-        }
-
-    }
-
-    function handleMouseDown(row, col) {
-        const newGrid = getNewGridWithWallToggled(spots, row, col);
-        setSpots(newGrid);
-        setMousePress(true);
-    }
-
-    function handleMouseEnter(row, col) {
-        if (!mouseIsPressed) return;
-        const newGrid = getNewGridWithWallToggled(spots, row, col);
-        setSpots(newGrid);
-    }
-
-    function handleMouseUp() {
-        setMousePress(false);
-    }
-
-    const getNewGridWithWallToggled = (grid, row, col) => {
-        const newGrid = grid.slice();
-        const node = newGrid[row][col];
-        newGrid[row][col] = {
-            ...node,
-            isWall: !node.isWall,
-        };
-        return newGrid;
-    };
+   
 
     return (
-        <div className="column right">
-            <button onClick={clearPath}>
-                Clear Path
-            </button>
-            <button onClick={visualiseAStar}>
-                Visualise a-star
-            </button>
-            <button onClick={visualiseBestFirstSearch}>
-                Visualise best-first-search
-            </button>
-            <button onClick={visualiseDjikstra}>
-                Visualise djikstra
-            </button>
-            <button onClick={visualiseBreadthFirstSearch}>
-                Visualise breadth-first-search
-            </button>
-            <button onClick={visualiseDepthFirstSearch}>
-                Visualise depth-first-search
-            </button>
-            <Grid array={spots} mouseIsPressed={mouseIsPressed} onMouseDown={handleMouseDown}
-                  onMouseEnter={handleMouseEnter} onMouseUp={handleMouseUp}/>
+        <div className="row">
+            {/* <AppState> */}  
+            <Navbar/> 
+                <SidePanel array={spots} setSpots={setSpots}/>
+                <Grid />
+            {/* </AppState> */}
         </div>
 
     );

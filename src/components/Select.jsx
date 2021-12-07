@@ -1,10 +1,10 @@
 import React from "react";
 
 function Select(props){
-    return <select className="select">
-        <option>Select Algorithm</option>
+    return <select onChange={props.onChange} className="select">
+        <option value="none">Select Algorithm</option>
         {props.algorithms.map(algorithm=>{
-            return <option>{algorithm}</option>
+            return <option value={algorithm.value}>{algorithm.name}</option>
         })};
     </select>
 }
