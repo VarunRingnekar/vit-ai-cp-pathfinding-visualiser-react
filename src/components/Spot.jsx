@@ -1,4 +1,5 @@
-import React from "react";
+import AppContext from "../context/app-context";
+import React, {useContext} from "react";
 
 function Spot(props) {
     const {
@@ -13,6 +14,9 @@ function Spot(props) {
         onMouseUp,
         onMouseEnter
     } = props;
+
+    const { spots, setSpots, mouseIsPressed, setMousePress } = useContext(AppContext);
+    // console.log("in spot ",typeof setMousePress)
 
     const extraClassName = isFinish
         ? 'spot-finish'
@@ -29,9 +33,9 @@ function Spot(props) {
         <div
             id={`node-${row}-${col}`}
             className={`spot ${extraClassName}`}
-            onMouseDown={() => onMouseDown(row, col)}
-            onMouseEnter={() => onMouseEnter(row, col)}
-            onMouseUp={() => onMouseUp(row, col)}
+            onMouseDown={() => onMouseDown(spots, setSpots, row, col, setMousePress)}
+            onMouseEnter={() => onMouseEnter(spots, setSpots, row, col, mouseIsPressed)}
+            onMouseUp={() => onMouseUp(setMousePress)}
         />
     );
 }
