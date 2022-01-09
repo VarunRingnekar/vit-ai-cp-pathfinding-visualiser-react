@@ -27,10 +27,6 @@ function Grid() {
                                     isVisited={isVisited}
                                     isPath={isPath}
                                     mouseIsPressed={mouseIsPressed}
-                                    // onMouseEnter={(spots, setSpots, row, col, mouseIsPressed) => onMouseEnter(spots, setSpots, row, col, mouseIsPressed)}
-                                    // onMouseDown={(spots, setSpots, row, col, setMousePress) => onMouseDown(spots, setSpots, row, col, setMousePress)}
-                                    // onMouseUp={(row, col, setMousePress) => onMouseUp(row, col, setMousePress)}
-
                                     onMouseEnter={() => onMouseEnter(spots, setSpots, row, col, mouseIsPressed)}
                                     onMouseDown={() => onMouseDown(spots, setSpots, row, col, setMousePress)}
                                     onMouseUp={() => onMouseUp(setMousePress)}

@@ -1,5 +1,3 @@
-// import React, {useEffect, useState} from "react";
-// import Grid from "./Grid";
 import {aStar} from "../algorithms/a-star";
 import {bestFirstSearch} from "../algorithms/best-first-search";
 import {djikstra} from "../algorithms/djikstra";
@@ -23,8 +21,6 @@ export function onMouseEnter(spots, setSpots, row, col, mouseIsPressed) {
 }
 
 export function onMouseUp(setMousePress) {
-    // console.log("mouseup "+spots)
-    // mouseIsPressed = false;
     setMousePress(false)
 }
 
@@ -74,53 +70,26 @@ export function visualise(algorithm, spots, setSpots, START_NODE_ROW, FINISH_NOD
 
 export function visualiseAStar(spots, setSpots, START_NODE_ROW, FINISH_NODE_ROW, START_NODE_COL, FINISH_NODE_COL) {
     const visitedNodesInOrder = aStar(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-    // console.log(visitedNodesInOrder);
-    // const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-    // console.log(path);
     return visitedNodesInOrder
-    // animate(visitedNodesInOrder, path, spots, setSpots);
 }
 export function visualiseBestFirstSearch(spots, setSpots, START_NODE_ROW, FINISH_NODE_ROW, START_NODE_COL, FINISH_NODE_COL) {
-//     clearPath();
     const visitedNodesInOrder = bestFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
     return visitedNodesInOrder;
 }
-//     // console.log(visitedNodesInOrder);
-//     const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-//     console.log(path);
-//     animate(visitedNodesInOrder, path);
-// }
 
 export function visualiseDjikstra(spots, setSpots, START_NODE_ROW, FINISH_NODE_ROW, START_NODE_COL, FINISH_NODE_COL) {
-//     clearPath();
     const visitedNodesInOrder = djikstra(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
     return visitedNodesInOrder;
 }
-//     // console.log(visitedNodesInOrder);
-//     const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-//     console.log(path);
-//     animate(visitedNodesInOrder, path);
-// }
-
 export function visualiseBreadthFirstSearch(spots, setSpots, START_NODE_ROW, FINISH_NODE_ROW, START_NODE_COL, FINISH_NODE_COL){
-//     clearPath();
     const visitedNodesInOrder = breadthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
     return visitedNodesInOrder;
 }
-//     // console.log(visitedNodesInOrder);
-    // const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-//     console.log(path);
-//     animate(visitedNodesInOrder, path);
-// }
 
 export function visualiseDepthFirstSearch(spots, setSpots, START_NODE_ROW, FINISH_NODE_ROW, START_NODE_COL, FINISH_NODE_COL){
-//     clearPath();
     const visitedNodesInOrder = depthFirstSearch(spots, spots[START_NODE_ROW][START_NODE_COL], spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
     return visitedNodesInOrder;
 }
-//     const path = getPath(spots[FINISH_NODE_ROW][FINISH_NODE_COL]);
-//     animate(visitedNodesInOrder, path);
-// }
 
 export function animate(visitedNodes, path, spots, setSpots) {
     for (let i = 0; i <= visitedNodes.length; i++) {
@@ -155,6 +124,7 @@ export function clearPath(spots, setSpots){
         Array.from(row).forEach(spot=>{
             spot.isVisited = false;
             spot.isPath = false;
+            spot.parent = null;
         })
     });
     setSpots(newGrid);
@@ -167,6 +137,7 @@ export function clearAll(spots, setSpots){
             spot.isWall = false;
             spot.isVisited = false;
             spot.isPath = false;
+            spot.parent = null;
         })
     });
     setSpots(newGrid);
